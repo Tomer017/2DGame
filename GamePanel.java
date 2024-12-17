@@ -1,5 +1,3 @@
-package main;
-
 import javax.swing.*;
 import java.awt.*;
 
@@ -20,8 +18,8 @@ public class GamePanel extends JPanel implements Runnable {
     Thread gameThread;
 
     // Set player's default position
-    int playerX = 100;
-    int playerY = 100;
+    double playerX = 100.0;
+    double playerY = 100.0;
 
     int playerSpeed = 4;
 
@@ -52,7 +50,6 @@ public class GamePanel extends JPanel implements Runnable {
 
             repaint();
 
-
             try {
 
                 double remainingTime = nextDrawTime - currentTime;
@@ -73,22 +70,29 @@ public class GamePanel extends JPanel implements Runnable {
     }
 
     public void update() {
-        if (keyH.upPressed){
+        double diagonalSpeed = playerSpeed / Math.sqrt(2); // Normalize speed for diagonal movement
+
+        if (keyH.upPressed && keyH.leftPressed) {
+            playerY -= diagonalSpeed;
+            playerX -= diagonalSpeed;
+        } else if (keyH.upPressed && keyH.rightPressed) {
+            playerY -= diagonalSpeed;
+            playerX += diagonalSpeed;
+        } else if (keyH.downPressed && keyH.leftPressed) {
+            playerY += diagonalSpeed;
+            playerX -= diagonalSpeed;
+        } else if (keyH.downPressed && keyH.rightPressed) {
+            playerY += diagonalSpeed;
+            playerX += diagonalSpeed;
+        } else if (keyH.upPressed) {
             playerY -= playerSpeed;
-        }
-
-        else if (keyH.downPressed){
+        } else if (keyH.downPressed) {
             playerY += playerSpeed;
-        }
-
-        else if (keyH.leftPressed){
+        } else if (keyH.leftPressed) {
             playerX -= playerSpeed;
-        }
-
-        else if (keyH.rightPressed){
+        } else if (keyH.rightPressed) {
             playerX += playerSpeed;
         }
-
     }
 
     public void paintComponent(Graphics g) {
@@ -96,7 +100,7 @@ public class GamePanel extends JPanel implements Runnable {
         Graphics2D g2 = (Graphics2D) g;
 
         g2.setColor(Color.WHITE);
-        g2.fillRect(playerX, playerY, tileSize, tileSize);
+        g2.fillRect((int) playerX, (int) playerY, tileSize, tileSize);
 
         g2.dispose();
 
